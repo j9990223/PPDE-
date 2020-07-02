@@ -52,8 +52,6 @@ def get_polynomial(num_var, max_deg):
     var = ['c']  # add dummy variable
     for i in range(num_var):
         var.append('x[' + str(i) + ']')
-
-    # compute all combinations of variables
     terms = []
     for x in combinations_with_replacement(var, max_deg):
         terms.append(list(x))
@@ -106,7 +104,6 @@ def solver(expr):
     return np.array(u.vector().get_local())
 
 
-# All parameters
 default_parameters = {
     'num_samples': 5000,
     'basis_fct': 'trigonometric',
@@ -125,7 +122,6 @@ default_parameters = {
 
 if __name__ == '__main__':
 
-    # update default parameters with system arguments
     params = update_params(sys.argv, default_parameters)
     data_path = './datasets/' + params['folder_name'] + '/'
     params['data_path'] = data_path
@@ -135,21 +131,17 @@ if __name__ == '__main__':
     if not os.path.exists(params['data_path']):
         os.makedirs(params['data_path'])
 
-    # save parameter dictionary only for first part
     if part == '1':
         with open(params['data_path'] + 'params', 'wb') as pickle_out:
             pickle.dump(params, pickle_out)
 
-    # create mesh and function space
     mesh = UnitSquareMesh(params['mesh_size'], params['mesh_size'])
     f = Expression(params['right_hand_side'], degree=params['inter_deg'])
     V = FunctionSpace(mesh, params['finite_element'], params['inter_deg'])
 
-    # define homogeneous Diriclet boundary
     u_D = Expression('0', degree=params['inter_deg'])
     bc = DirichletBC(V, u_D, boundary)
 
-    # generate coefficients
     num_samples = params['num_samples'] // params['part_max']
     if params['basis_fct'] == 'polynomial':
         expr_list, coeff = polynomial_basis(num_samples, params['num_basis'], params['mu'])
@@ -162,14 +154,12 @@ if __name__ == '__main__':
     else:
         print('Basis function not found')
 
-    # save sqrt of Gram matrix only for first part
     if part == '1':
         G_sqrt = sqrt_gram_matrix(V)
         np.save(data_path + 'G', G_sqrt)
 
     np.save(data_path + 'X' + part, coeff)
 
-    # multithreading for quicker data generation, upping processes
     num_processes = 2
     pool = mp.Pool(processes=num_processes)
     results = pool.map(solver, expr_list)
@@ -177,6 +167,5 @@ if __name__ == '__main__':
 
     np.save(data_path + 'Y' + part, data)
 
-    # check if dimensions are as expected
     print(data.shape)
     print(coeff.shape)
