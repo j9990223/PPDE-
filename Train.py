@@ -135,7 +135,7 @@ with tf.compat.v1.variable_scope('Graph') as scope:
 
         for i in range(epochs):
           count = 0
-          for x_in_train_batch, y_true_train_batch in get_batch(x_train, y_train, batch_size):
+          for x_train_batch, y_true_train_batch in get_batch(x_train, y_train, batch_size):
             count = count + 1
 
 # We run a session with the loss function and the objective to minimize the loss function. 
