@@ -157,5 +157,7 @@ with tf.compat.v1.variable_scope('Graph') as scope:
         y_NN = y_res[0]
         
 print('done')
-x=range(20000)
+# x = range(epochs*(epochs/batch_size))
+# This is used to graph the evolution of current_loss relative to the number of batches trained.
+x = range(40000)
 plt.semilogy(x,losses)
