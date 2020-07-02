@@ -1,3 +1,9 @@
+# I used the terminal to run this code and generate the data, only for the trigonometric basis.
+# I input "fenicsproject run" then "fenicsproject create ppde" to create a session
+# Then "fenicsproject run ppde" to run the session and finally "python3 Datagen.py" to execute the code.
+# It results in a folder containing 4 files: G.npy contains the square root of the gram matrix.
+# X1.npy contains the input vectors and Y1.npy contains the output vectors.
+
 from ast import literal_eval
 from fenics import *
 from itertools import combinations_with_replacement
