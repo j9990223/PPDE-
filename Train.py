@@ -128,7 +128,7 @@ with tf.compat.v1.variable_scope('Graph',reuse=tf.compat.v1.AUTO_REUSE) as scope
     with tf.compat.v1.variable_scope('Loss'):
         
 # The loss function is defined by the l2 norm of matrix (G*y-G*y_true) divided by the l2 norm of (G*y_true)
-        loss = ((tf.compat.v1.losses.mean_squared_error(tf.linalg.matmul(Gram,y),tf.linalg.matmul(Gram,y_true)))/tf.linalg.norm(tf.linalg.matmul(Gram,y_true)))
+        loss = tf.compat.v1.losses.mean_squared_error(tf.math.divide(tf.linalg.matmul(Gram,y),Gram_train_batch),tf.math.divide(tf.linalg.matmul(Gram,y_true),Gram_train_batch))
         validationloss = (tf.compat.v1.losses.mean_squared_error(tf.math.divide(tf.linalg.matmul(Gram,z),Gram_test),tf.math.divide(tf.linalg.matmul(Gram,y_t),Gram_test)))
     lrn_rate = 0.0002
     
